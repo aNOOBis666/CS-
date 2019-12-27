@@ -5,7 +5,6 @@ from datetime import datetime
 from bs4 import BeautifulSoup
 from typing import List, Tuple
 
-
 access_token = '1004359824:AAEgBBGWqb0y2eDqXyHONN6Lcf8b35Vb6Zk'
 bot = telebot.TeleBot(access_token)
 
@@ -33,8 +32,8 @@ day_c = {0: '1day',
 		 4: '5day',
 		 5: '6day',
 		 6: '7day'}
-
 now = datetime.today()
+
 
 def get_page(group: str) -> str:
 	week = datetime.date(now).isocalendar()[1]
@@ -113,31 +112,33 @@ def get_near_lesson(message):
 		_, group = message.text.split()
 	except:
 		bot.send_message(message.chat.id, 'Это что такое? Напишите пожалуйста нормально, я вас не понимаю')
-		return None
+	return None
 	now = datetime.now()
 	day = datetime.weekday(now)
 	day_p = day_c.get(day)
 	time_p = tuple([now.hour, now.minute])
-	count_minute_p = (time_p[0] * 60) + time_p[1]
+	count_minute_now = (time_p[0] * 60) + time_p[1]
 	web_page = get_page(group)
 	schedule_for_day = parse_schedule_for_a_day(web_page, day_p)
-	if not schedule_for_day:
-		bot.send_message(message.chat.id, 'Запрошенная вами группа отдыхает')
-		return
+	for i in  day_c:
+		if not schedule_for_day:
+			day += 1
+			day_p = day_c.get(day)
+			time_p = tuple([now.hour, now.minute])
+			count_minute_now = (time_p[0] * 60) + time_p[1]
+			web_page = get_page(group)
+			schedule_for_day = parse_schedule_for_a_day(web_page, day_p)
+		return 
 	times_lst, locations_lst, lessons_lst, aud_lst = schedule_for_day
-	for time_s in times_lst:
-		time_s = time_s.split('-')
+	for i in range(len(times_lst)):
+		time_s = times_lst[i].split('-')
 		time_s = datetime.strptime(time_s[0], '%H:%M')
 		time_s = tuple([time_s.hour, time_s.minute])
 		count_minute_s = (time_s[0] * 60) + time_s[1]
-		if count_minute_p < count_minute_s:
-			resp = ''
-			for time, location, lesson, aud in zip(times_lst, locations_lst, lessons_lst, aud_lst):
-				resp = 'По найденному мной расписанию следует, что ваша следующая пара:\n \n\n <b>{}</b>, {} <i>{}</i> {} \n\n'.format(time, location, lesson, aud)
-			return bot.send_message(message.chat.id, resp, parse_mode='HTML')
-		else:
-			pass
-	bot.send_message(message.chat.id, 'Пары кончились, можно идти на заслуженный отдых')
+	if count_minute_now < count_minute_s:
+		resp = '⏰ Следущая пара:\n \n\n <b>{}</b>, {} <i>{}</i> {} \n\n'.format(times_lst[i], locations_lst[i],
+		lessons_lst[i], aud_lst[i])
+	return bot.send_message(message.chat.id, resp, parse_mode='HTML')
 
 
 @bot.message_handler(commands=['tommorow'])
@@ -192,3 +193,4 @@ def get_all_schedule(message):
 
 if __name__ == '__main__':
 	bot.polling(none_stop=True)
+
