@@ -34,3 +34,5 @@ def age_predict(user_id: int) -> Optional[float]:
 if __name__ == '__main__':
 	age_inp = int(input('Введите нужный id: '))
 	print(age_predict(age_inp))
+
+	
