@@ -22,7 +22,7 @@ def get(url, params={}, timeout=5, max_retries=5, backoff_factor=0.3):
                 return response
         except requests.exceptions.RequestException:
             time.sleep(delay)
-            delay = delay * backoff_factor + random.uniform(0, 0.1)
+            delay = delay * backoff_factor + random.random()
             retries += 1
     return False
 
