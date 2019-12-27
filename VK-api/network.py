@@ -39,3 +39,4 @@ def plot_graph(user_id):
 
 if __name__ == '__main__':
 	plot_graph(422277418)
+	
