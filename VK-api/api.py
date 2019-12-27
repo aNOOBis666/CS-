@@ -5,6 +5,7 @@ import config
 
 
 def get(url, params={}, timeout=5, max_retries=5, backoff_factor=0.3):
+<<<<<<< HEAD
 	""" Выполнить GET-запрос
 	:param url: адрес, на который необходимо выполнить запрос
 	:param params: параметры запроса
@@ -25,6 +26,28 @@ def get(url, params={}, timeout=5, max_retries=5, backoff_factor=0.3):
 			delay = delay * backoff_factor + random.random()
 			retries += 1
 	return False
+=======
+    """ Выполнить GET-запрос
+    :param url: адрес, на который необходимо выполнить запрос
+    :param params: параметры запроса
+    :param timeout: максимальное время ожидания ответа от сервера
+    :param max_retries: максимальное число повторных запросов
+    :param backoff_factor: коэффициент экспоненциального нарастания задержки
+    """
+    delay = 0.1
+    retries = 0
+    while retries < max_retries:
+        try:
+            response = requests.get(url, params, str(timeout))
+            response.raise_for_status()
+            if response.status_code == 200:
+                return response
+        except requests.exceptions.RequestException:
+            time.sleep(delay)
+            delay = delay * backoff_factor + random.random()
+            retries += 1
+    return False
+>>>>>>> fafe54a5c7ab0b14f1242a0a5eb453ea202020cb
 
 
 def get_friends(user_id, fields):
