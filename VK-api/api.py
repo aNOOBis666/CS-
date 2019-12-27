@@ -44,3 +44,4 @@ def get_friends(user_id, fields):
 	response = requests.get(query)
 	r = response.json()
 	return r['response']['items']
+
