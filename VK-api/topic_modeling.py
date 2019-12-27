@@ -134,5 +134,4 @@ if __name__ == "__main__":
 	vis = pyLDAvis.gensim.prepare(lda_model, corpus, dictionary)
 	pyLDAvis.save_html(vis, 'topic model.html')
 	pyLDAvis.show(data=vis, open_browser=True)
-
 	
