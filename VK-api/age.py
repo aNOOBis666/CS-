@@ -36,3 +36,4 @@ if __name__ == '__main__':
 	print(age_predict(age_inp))
 
 	
+	
